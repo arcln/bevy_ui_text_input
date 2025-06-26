@@ -8,7 +8,6 @@ use crate::TextSubmitEvent;
 use crate::actions::TextInputAction;
 use crate::actions::TextInputEdit;
 use crate::actions::apply_text_input_edit;
-use crate::clipboard::Clipboard;
 use crate::text_input_pipeline::TextInputPipeline;
 use bevy::ecs::change_detection::DetectChanges;
 use bevy::ecs::component::Component;
@@ -557,7 +556,6 @@ pub fn process_text_input_queues(
     )>,
     mut text_input_pipeline: ResMut<TextInputPipeline>,
     mut submit_writer: EventWriter<TextSubmitEvent>,
-    mut clipboard: ResMut<Clipboard>,
 ) {
     let mut font_system = &mut text_input_pipeline.font_system;
 
@@ -578,7 +576,7 @@ pub fn process_text_input_queues(
                 }
                 TextInputAction::Cut => {
                     if let Some(text) = editor.copy_selection() {
-                        let _ = clipboard.set_text(text);
+                        // let _ = clipboard.set_text(text);
                         apply_text_input_edit(
                             TextInputEdit::Delete,
                             &mut editor,
@@ -590,29 +588,29 @@ pub fn process_text_input_queues(
                 }
                 TextInputAction::Copy => {
                     if let Some(text) = editor.copy_selection() {
-                        let _ = clipboard.set_text(text);
+                        // let _ = clipboard.set_text(text);
                     }
                 }
                 TextInputAction::Paste => {
-                    actions_queue.add_front(TextInputAction::PasteDeferred(clipboard.fetch_text()));
+                    // actions_queue.add_front(TextInputAction::PasteDeferred(clipboard.fetch_text()));
                 }
-                TextInputAction::PasteDeferred(mut clipboard_read) => {
-                    if let Some(text) = clipboard_read.poll_result() {
-                        if let Ok(text) = text {
-                            apply_text_input_edit(
-                                TextInputEdit::Paste(text),
-                                &mut editor,
-                                changes,
-                                node.max_chars,
-                                &node.filter,
-                            );
-                        }
-                    } else {
-                        // Add the clipboard read back to the queue, process it and the remaining actions next frame.
-                        actions_queue.add_front(TextInputAction::PasteDeferred(clipboard_read));
-                        break;
-                    }
-                }
+                // TextInputAction::PasteDeferred(mut clipboard_read) => {
+                //     if let Some(text) = clipboard_read.poll_result() {
+                //         if let Ok(text) = text {
+                //             apply_text_input_edit(
+                //                 TextInputEdit::Paste(text),
+                //                 &mut editor,
+                //                 changes,
+                //                 node.max_chars,
+                //                 &node.filter,
+                //             );
+                //         }
+                //     } else {
+                //         // Add the clipboard read back to the queue, process it and the remaining actions next frame.
+                //         actions_queue.add_front(TextInputAction::PasteDeferred(clipboard_read));
+                //         break;
+                //     }
+                // }
                 TextInputAction::Edit(text_input_edit) => {
                     apply_text_input_edit(
                         text_input_edit,
