@@ -155,8 +155,8 @@ pub(crate) fn on_drag_text_input(
     });
 }
 
-pub(crate) fn on_text_input_pressed(
-    trigger: Trigger<Pointer<Pressed>>,
+pub(crate) fn on_text_input_clicked(
+    mut trigger: Trigger<Pointer<Click>>,
     mut node_query: Query<(
         &ComputedNode,
         &GlobalTransform,
@@ -200,6 +200,8 @@ pub(crate) fn on_text_input_pressed(
         x: position.x as i32 + scroll.horizontal as i32,
         y: position.y as i32,
     });
+
+    trigger.propagate(false);
 }
 
 /// Updates the scroll position of scrollable nodes in response to mouse input

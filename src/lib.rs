@@ -32,7 +32,7 @@ use bevy::ui::{Node, RenderUiSystem, UiSystem, extract_text_sections};
 use edit::{
     cursor_blink_system, listen_ime_events, mouse_wheel_scroll, on_drag_text_input,
     on_focused_keyboard_input, on_move_clear_multi_click, on_multi_click_set_selection,
-    on_text_input_pressed, process_text_input_queues, toggle_ime_on_focus,
+    on_text_input_clicked, process_text_input_queues, toggle_ime_on_focus,
 };
 use once_cell::sync::Lazy;
 use regex::Regex;
@@ -137,7 +137,7 @@ impl Default for TextInputNode {
 fn on_add_textinputnode(mut world: DeferredWorld, context: HookContext) {
     for mut observer in [
         Observer::new(on_drag_text_input),
-        Observer::new(on_text_input_pressed),
+        Observer::new(on_text_input_clicked),
         Observer::new(on_multi_click_set_selection),
         Observer::new(on_move_clear_multi_click),
         Observer::new(on_focused_keyboard_input),
